@@ -9,6 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             text-align: center;
+            align-items: center;
         }
         h1 {
             color: #333;
@@ -37,6 +38,8 @@
             margin: 10px;
             width: 100%;
             box-sizing: border-box;
+            border: 1px solid #555;
+            border-radius: 4px;
         }
         textarea {
             height: 100px;
@@ -48,7 +51,7 @@
     <h1>Application de Dictée</h1>
     <div>
         <label for="words-input">Entrez vos mots (séparés par des virgules) :</label>
-        <textarea id="words-input">Bonjour, Comment, Allez, Vous, Aujourd'hui, Dictée, Application</textarea>
+        <textarea id="words-input"></textarea>
     </div>
     <div>
         <label for="delay">Délai (en secondes) :</label>
@@ -57,45 +60,46 @@
     </div>
     <div id="word-display">...</div>
 
-    <script>
-        function speakWord(word) {
-            const utterance = new SpeechSynthesisUtterance(word);
-            speechSynthesis.speak(utterance);
+ <script>
+    function speakWord(word) {
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = "fr-FR"; // Définit la langue en français
+        speechSynthesis.speak(utterance);
+    }
+
+    function displayWord(word) {
+        const wordDisplay = document.getElementById("word-display");
+        wordDisplay.textContent = word;
+    }
+
+    async function dictateWords(words, delay) {
+        for (let word of words) {
+            displayWord(word);
+            speakWord(word);
+            await new Promise(resolve => setTimeout(resolve, delay * 1000));
+        }
+        displayWord("Dictée terminée !");
+    }
+
+    document.getElementById("start-dictation").addEventListener("click", () => {
+        const wordsInput = document.getElementById("words-input").value;
+        const words = wordsInput.split(",").map(word => word.trim()).filter(word => word);
+
+        if (words.length === 0) {
+            alert("Veuillez entrer au moins un mot.");
+            return;
         }
 
-        function displayWord(word) {
-            const wordDisplay = document.getElementById("word-display");
-            wordDisplay.textContent = word;
+        const delayInput = document.getElementById("delay").value;
+        const delay = parseInt(delayInput, 10);
+
+        if (isNaN(delay) || delay < 1) {
+            alert("Veuillez entrer un délai valide (minimum 1 seconde).");
+            return;
         }
 
-        async function dictateWords(words, delay) {
-            for (let word of words) {
-                displayWord(word);
-                speakWord(word);
-                await new Promise(resolve => setTimeout(resolve, delay * 1000));
-            }
-            displayWord("Dictée terminée !");
-        }
-
-        document.getElementById("start-dictation").addEventListener("click", () => {
-            const wordsInput = document.getElementById("words-input").value;
-            const words = wordsInput.split(",").map(word => word.trim()).filter(word => word);
-
-            if (words.length === 0) {
-                alert("Veuillez entrer au moins un mot.");
-                return;
-            }
-
-            const delayInput = document.getElementById("delay").value;
-            const delay = parseInt(delayInput, 10);
-
-            if (isNaN(delay) || delay < 1) {
-                alert("Veuillez entrer un délai valide (minimum 1 seconde).");
-                return;
-            }
-
-            dictateWords(words, delay);
-        });
-    </script>
+        dictateWords(words, delay);
+    });
+</script>
 </body>
 </html>
