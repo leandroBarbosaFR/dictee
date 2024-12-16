@@ -1,106 +1,87 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dictée avec Délai</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #f9f9f9, #e8e8e8);
-    }
-
-    h1 {
-      color: #444;
-    }
-
-    textarea {
-      width: 90%;
-      max-width: 600px;
-      height: 150px;
-      font-size: 16px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      resize: none;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .output {
-      margin-top: 20px;
-      color: #555;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application de Dictée</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        #word-display {
+            font-size: 2em;
+            margin: 20px 0;
+            color: #555;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 10px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input {
+            padding: 10px;
+            font-size: 1em;
+            margin: 10px;
+            width: 100px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-  <h1>Dictée avec Délai</h1>
-  <textarea id="textInput" placeholder="Entrez les mots ou phrases ici..."></textarea>
-  <button id="speakButton">Démarrer la dictée</button>
-  <div class="output" id="outputMessage"></div>
+    <h1>Application de Dictée</h1>
+    <div>
+        <label for="delay">Délai (en secondes) :</label>
+        <input type="number" id="delay" value="5" min="1">
+        <button id="start-dictation">Commencer la dictée</button>
+    </div>
+    <div id="word-display">...</div>
 
-  <script>
-    const synth = window.speechSynthesis;
+    <script>
+        const words = ["Bonjour", "Comment", "Allez", "Vous", "Aujourd'hui", "Dictée", "Application"];
 
-    if (!synth) {
-      document.getElementById("outputMessage").textContent = "La synthèse vocale n'est pas disponible sur ce navigateur.";
-    }
+        function speakWord(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            speechSynthesis.speak(utterance);
+        }
 
-    const textInput = document.getElementById("textInput");
-    const speakButton = document.getElementById("speakButton");
-    const outputMessage = document.getElementById("outputMessage");
+        function displayWord(word) {
+            const wordDisplay = document.getElementById("word-display");
+            wordDisplay.textContent = word;
+        }
 
-    speakButton.addEventListener("click", async () => {
-      const text = textInput.value.trim();
+        async function dictateWords(words, delay) {
+            for (let word of words) {
+                displayWord(word);
+                speakWord(word);
+                await new Promise(resolve => setTimeout(resolve, delay * 1000));
+            }
+            displayWord("Dictée terminée !");
+        }
 
-      if (!text) {
-        outputMessage.textContent = "Veuillez entrer du texte à dicter.";
-        return;
-      }
+        document.getElementById("start-dictation").addEventListener("click", () => {
+            const delayInput = document.getElementById("delay").value;
+            const delay = parseInt(delayInput, 10);
 
-      const words = text.split(" "); // Divise le texte en mots
-      outputMessage.textContent = "Dictée en cours...";
+            if (isNaN(delay) || delay < 1) {
+                alert("Veuillez entrer un délai valide (minimum 1 seconde).");
+                return;
+            }
 
-      for (let i = 0; i < words.length; i++) {
-        speakWord(words[i]);
-        await delay(10000); // Délai de 10 secondes entre chaque mot
-      }
-
-      outputMessage.textContent = "Dictée terminée.";
-    });
-
-    // Fonction pour dicter un mot
-    function speakWord(word) {
-      const utterance = new SpeechSynthesisUtterance(word);
-      utterance.lang = "fr-FR";
-      synth.speak(utterance);
-    }
-
-    // Fonction pour créer un délai
-    function delay(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-  </script>
+            dictateWords(words, delay);
+        });
+    </script>
 </body>
 </html>
