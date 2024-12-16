@@ -31,17 +31,25 @@
         button:hover {
             background-color: #0056b3;
         }
-        input {
+        input, textarea {
             padding: 10px;
             font-size: 1em;
             margin: 10px;
-            width: 100px;
-            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+            resize: none;
         }
     </style>
 </head>
 <body>
     <h1>Application de Dictée</h1>
+    <div>
+        <label for="words-input">Entrez vos mots (séparés par des virgules) :</label>
+        <textarea id="words-input">Bonjour, Comment, Allez, Vous, Aujourd'hui, Dictée, Application</textarea>
+    </div>
     <div>
         <label for="delay">Délai (en secondes) :</label>
         <input type="number" id="delay" value="5" min="1">
@@ -50,8 +58,6 @@
     <div id="word-display">...</div>
 
     <script>
-        const words = ["Bonjour", "Comment", "Allez", "Vous", "Aujourd'hui", "Dictée", "Application"];
-
         function speakWord(word) {
             const utterance = new SpeechSynthesisUtterance(word);
             speechSynthesis.speak(utterance);
@@ -72,6 +78,14 @@
         }
 
         document.getElementById("start-dictation").addEventListener("click", () => {
+            const wordsInput = document.getElementById("words-input").value;
+            const words = wordsInput.split(",").map(word => word.trim()).filter(word => word);
+
+            if (words.length === 0) {
+                alert("Veuillez entrer au moins un mot.");
+                return;
+            }
+
             const delayInput = document.getElementById("delay").value;
             const delay = parseInt(delayInput, 10);
 
