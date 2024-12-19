@@ -31,12 +31,9 @@
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
+            0%, 100% {
                 transform: scale(1);
             }
-
             50% {
                 transform: scale(1.1);
             }
@@ -87,24 +84,15 @@
             height: 60px;
             width: 60px;
         }
-
-        #mic-button {
-            background-color: #28a745;
-        }
-
-        #mic-button:hover {
-            background-color: #218838;
-        }
     </style>
 </head>
 
 <body>
-    <h1><i class="fas fa-book-open"></i> L'heure de la <span>Dictée</span></h1>
+    <h1><i class="fas fa-book-open"></i> L'heure de la  <span>Dictée</span></h1>
     <p>Transformez vos mots en dictées interactives.</p>
     <div>
         <label for="words-input">Entrez vos mots (séparés par des virgules) :</label>
         <textarea id="words-input" placeholder="exemple: qui, quoi, temps, matin"></textarea>
-        <button id="mic-button"><i class="fas fa-microphone"></i> Parler</button>
     </div>
     <div>
         <label id="delay-input" for="delay">Délai (en secondes) :</label>
@@ -157,30 +145,11 @@
             dictateWords(words, delay);
         });
 
-        // Feature to allow speech input
-        document.getElementById("mic-button").addEventListener("click", () => {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                alert("Votre navigateur ne prend pas en charge la reconnaissance vocale.");
-                return;
-            }
-
-            const recognition = new SpeechRecognition();
-            recognition.lang = "fr-FR";
-            recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
-
-            recognition.start();
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                const wordsInput = document.getElementById("words-input");
-                wordsInput.value += (wordsInput.value ? ", " : "") + transcript;
-            };
-
-            recognition.onerror = (event) => {
-                alert("Une erreur est survenue lors de la reconnaissance vocale : " + event.error);
-            };
+        // Supprimer le placeholder lors du focus et changer la couleur du texte en noir
+        const wordsInput = document.getElementById("words-input");
+        wordsInput.addEventListener("focus", () => {
+            wordsInput.placeholder = "";
+            wordsInput.style.color = "#000"; // Change la couleur du texte en noir
         });
     </script>
 </body>
