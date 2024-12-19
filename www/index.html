@@ -61,6 +61,11 @@
             height: 100px;
             resize: none;
         }
+
+        #delay {
+            height: 60px;
+            width: 60px;
+        }
     </style>
 </head>
 <body>
@@ -70,7 +75,7 @@
         <textarea id="words-input">exemple: qui, quoi, temps, matin</textarea>
     </div>
     <div>
-        <label for="delay">Délai (en secondes) :</label>
+        <label id="delay-input" for="delay">Délai (en secondes) :</label>
         <input type="number" id="delay" value="5" min="1">
         <button id="start-dictation">Commencer la dictée</button>
     </div>
