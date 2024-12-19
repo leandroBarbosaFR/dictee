@@ -1,5 +1,6 @@
 {
-  "appId": "com.leandrobarbosa.dicteefacile",
-  "appName": "Dictee Facile",
-  "webDir": "https://github.com/leandroBarbosaFR/dictee"
+  "appId": "com.example.app",
+  "appName": "dictee",
+  "webDir": "dist",
+  "bundledWebRuntime": false
 }
