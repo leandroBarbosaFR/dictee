@@ -12,15 +12,29 @@
             margin: 20px;
             text-align: center;
             align-items: center;
+            background-color: #e9e6e6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         h1 {
-            color: #333;
+            color: #1a1a1a;
+        }
+
+        h1 span {
+            color: #007BFF;
         }
         #word-display {
             font-size: 2em;
             margin: 20px 0;
             color: #555;
         }
+
+        #words-input {
+          color: #acacac;
+        }
+
         button {
             padding: 10px 20px;
             font-size: 1em;
@@ -40,8 +54,8 @@
             margin: 10px;
             width: 100%;
             box-sizing: border-box;
-            border: 1px solid #555;
-            border-radius: 4px;
+            border: 3px solid #d7d3d3;
+            border-radius: 20px;
         }
         textarea {
             height: 100px;
@@ -50,10 +64,10 @@
     </style>
 </head>
 <body>
-    <h1>Application de Dictée</h1>
+    <h1>Application de <span>Dictée</span></h1>
     <div>
         <label for="words-input">Entrez vos mots (séparés par des virgules) :</label>
-        <textarea id="words-input"></textarea>
+        <textarea id="words-input">exemple: qui, quoi, temps, matin</textarea>
     </div>
     <div>
         <label for="delay">Délai (en secondes) :</label>
