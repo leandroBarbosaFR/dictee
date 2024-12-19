@@ -1,6 +1,6 @@
 {
-  "appId": "com.example.app",
+  "appId": "com.leandrobarbosa.dicteefacile",
   "appName": "dictee",
-  "webDir": "dist",
+  "webDir": "www",
   "bundledWebRuntime": false
 }
