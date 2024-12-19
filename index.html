@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,22 +18,31 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            color: #1a1a1a;
         }
+
         h1 {
             color: #1a1a1a;
         }
 
         h1 span {
             color: #007BFF;
+            animation: pulse 2s infinite;
         }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
         #word-display {
             font-size: 2em;
             margin: 20px 0;
             color: #555;
-        }
-
-        #words-input {
-          color: #acacac;
         }
 
         button {
@@ -45,10 +55,13 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #0056b3;
         }
-        input, textarea {
+
+        input,
+        textarea {
             padding: 10px;
             font-size: 1em;
             margin: 10px;
@@ -57,9 +70,14 @@
             border: 3px solid #d7d3d3;
             border-radius: 20px;
         }
+
         textarea {
             height: 100px;
             resize: none;
+        }
+
+        textarea:focus {
+            outline: none;
         }
 
         #delay {
@@ -68,11 +86,13 @@
         }
     </style>
 </head>
+
 <body>
-    <h1>Application de <span>Dictée</span></h1>
+    <h1><i class="fas fa-book-open"></i> L'heure de la  <span>Dictée</span></h1>
+    <p>Transformez vos mots en dictées interactives.</p>
     <div>
         <label for="words-input">Entrez vos mots (séparés par des virgules) :</label>
-        <textarea id="words-input">exemple: qui, quoi, temps, matin</textarea>
+        <textarea id="words-input" placeholder="exemple: qui, quoi, temps, matin"></textarea>
     </div>
     <div>
         <label id="delay-input" for="delay">Délai (en secondes) :</label>
@@ -84,46 +104,54 @@
         Créer avec <i class="fa fa-heart pulse" style="color: red;"></i> <span>par Ana-Luisa</span>
     </span>
 
- <script>
-    function speakWord(word) {
-        const utterance = new SpeechSynthesisUtterance(word);
-        utterance.lang = "fr-FR"; // Définit la langue en français
-        speechSynthesis.speak(utterance);
-    }
-
-    function displayWord(word) {
-        const wordDisplay = document.getElementById("word-display");
-        wordDisplay.textContent = word;
-    }
-
-    async function dictateWords(words, delay) {
-        for (let word of words) {
-            displayWord(word);
-            speakWord(word);
-            await new Promise(resolve => setTimeout(resolve, delay * 1000));
-        }
-        displayWord("Dictée terminée !");
-    }
-
-    document.getElementById("start-dictation").addEventListener("click", () => {
-        const wordsInput = document.getElementById("words-input").value;
-        const words = wordsInput.split(",").map(word => word.trim()).filter(word => word);
-
-        if (words.length === 0) {
-            alert("Veuillez entrer au moins un mot.");
-            return;
+    <script>
+        function speakWord(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = "fr-FR";
+            speechSynthesis.speak(utterance);
         }
 
-        const delayInput = document.getElementById("delay").value;
-        const delay = parseInt(delayInput, 10);
-
-        if (isNaN(delay) || delay < 1) {
-            alert("Veuillez entrer un délai valide (minimum 1 seconde).");
-            return;
+        function displayWord(word) {
+            const wordDisplay = document.getElementById("word-display");
+            wordDisplay.textContent = word;
         }
 
-        dictateWords(words, delay);
-    });
-</script>
+        async function dictateWords(words, delay) {
+            for (let word of words) {
+                displayWord(word);
+                speakWord(word);
+                await new Promise(resolve => setTimeout(resolve, delay * 1000));
+            }
+            displayWord("Dictée terminée !");
+        }
+
+        document.getElementById("start-dictation").addEventListener("click", () => {
+            const wordsInput = document.getElementById("words-input");
+            const words = wordsInput.value.split(",").map(word => word.trim()).filter(word => word);
+
+            if (words.length === 0) {
+                alert("Veuillez entrer au moins un mot.");
+                return;
+            }
+
+            const delayInput = document.getElementById("delay");
+            const delay = parseInt(delayInput.value, 10);
+
+            if (isNaN(delay) || delay < 1) {
+                alert("Veuillez entrer un délai valide (minimum 1 seconde).");
+                return;
+            }
+
+            dictateWords(words, delay);
+        });
+
+        // Supprimer le placeholder lors du focus et changer la couleur du texte en noir
+        const wordsInput = document.getElementById("words-input");
+        wordsInput.addEventListener("focus", () => {
+            wordsInput.placeholder = "";
+            wordsInput.style.color = "#000"; // Change la couleur du texte en noir
+        });
+    </script>
 </body>
+
 </html>
